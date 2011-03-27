@@ -35,8 +35,8 @@ module OkJson
 
     typ, val = ts[0]
     case typ
-    when :lcubr    then objparse(ts[1..-1])
-    when :lsqbr    then arrparse(ts[1..-1])
+    when :lcubr then objparse(ts)
+    when :lsqbr then arrparse(ts)
     else
       raise "unexpected #{val.inspect}"
     end
@@ -52,8 +52,8 @@ module OkJson
 
     typ, val = ts[0]
     case typ
-    when :lcubr    then objparse(ts[1..-1])
-    when :lsqbr    then arrparse(ts[1..-1])
+    when :lcubr    then objparse(ts)
+    when :lsqbr    then arrparse(ts)
     when :val,:str then [val, ts[1..-1]]
     else
       raise "unexpected #{val.inspect}"
@@ -63,8 +63,8 @@ module OkJson
 
   # Parses an "object" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
-  # (Expects no opening "{"; eats the closing "}".)
   def objparse(ts)
+    ts = eat(:lcubr, ts)
     obj = {}
 
     if ts[0][0] == :rcubr
@@ -95,18 +95,16 @@ module OkJson
   # Returns the parsed value and any trailing tokens.
   def pairparse(ts)
     k, ts = ts[0][1], ts[1..-1]
-    if ts[0][0] != :colon
-      raise 'expected ":"'
-    end
-    v, ts = valparse(ts[1..-1])
+    ts = eat(:colon, ts)
+    v, ts = valparse(ts)
     [k, v, ts]
   end
 
 
   # Parses an "array" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
-  # (Expects no opening "["; eats the closing "]".)
   def arrparse(ts)
+    ts = eat(:lsqbr, ts)
     arr = []
 
     if ts[0][0] == :rsqbr
