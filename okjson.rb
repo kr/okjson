@@ -52,8 +52,8 @@ module OkJson
 
     typ, val = ts[0]
     case typ
-    when '{'    then objparse(ts)
-    when '['    then arrparse(ts)
+    when '{' then objparse(ts)
+    when '[' then arrparse(ts)
     when :val,:str then [val, ts[1..-1]]
     else
       raise "unexpected #{val.inspect}"
