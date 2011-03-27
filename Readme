@@ -1,0 +1,40 @@
+This is a json parser, written in ruby.
+It has no dependencies other than ruby.
+
+This library is intended to be "vendored".
+It is not a gem; instead, copy okjson.rb
+into your project and "require" it directly.
+This method helps you avoid an external
+dependency. It's only about 530 lines of
+source; about half of that is UTF-8 coding.
+
+OkJson is not particularly fast or flexible,
+but it is designed to be simple and portable.
+It should suffice for most needs.
+
+Patches to increase the correctness,
+readability, or portability of the
+source code will be gratefully accepted.
+Other patches likely won't.
+
+
+To Test:
+
+  $ ./test
+  $ RUBY=rbx ./test
+
+(Note: these tests originated at
+https://github.com/genki/json
+but have been changed to follow
+RFC 4627 and revised substantially.)
+
+
+To Use:
+
+  OkJson.encode({"abc" => [123, -456.789]})
+  => "{\"abc\":[123,-456.789]}"
+
+  OkJson.decode('{"abc":[123,-456.789e0]}')
+  => {"abc"=>[123, -456.789]}
+
+That's it.

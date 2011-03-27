@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+: ${RUBY:=ruby}
+
+cycle() {
+    $RUBY -r ./okjson -e 'print(OkJson.encode(OkJson.decode($stdin.read)))'
+}
+
+fs=$*
+if test -z "$fs"
+then fs=t/*.json
+fi
+
+for f in $fs
+do
+    case $f in
+    t/valid*.json)
+        echo $f
+        cycle <$f >/dev/null
+        diff $f.exp <(cycle <$f 2>/dev/null)
+        ;;
+    t/invalid*.json)
+        echo $f
+        cycle <$f 2>/dev/null && { echo; exit 1; }
+        ;;
+    esac
+done
