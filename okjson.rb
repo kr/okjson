@@ -33,7 +33,7 @@ module OkJson
       raise 'empty'
     end
 
-    typ, val = ts[0]
+    typ, _, val = ts[0]
     case typ
     when '{' then objparse(ts)
     when '[' then arrparse(ts)
@@ -50,7 +50,7 @@ module OkJson
       raise 'empty'
     end
 
-    typ, val = ts[0]
+    typ, _, val = ts[0]
     case typ
     when '{' then objparse(ts)
     when '[' then arrparse(ts)
@@ -94,7 +94,7 @@ module OkJson
   # Parses a "member" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
   def pairparse(ts)
-    k, ts = ts[0][1], ts[1..-1]
+    (_, _, k), ts = ts[0], ts[1..-1]
     ts = eat(':', ts)
     v, ts = valparse(ts)
     [k, v, ts]
@@ -141,7 +141,6 @@ module OkJson
 
   # Sans s and returns a list of json tokens,
   # excluding white space (as defined in RFC 4627).
-  # See tok for a description of token.
   def lex(s)
     ts = []
     while s.length > 0
@@ -150,7 +149,7 @@ module OkJson
         raise "invalid character at #{s[0,10].inspect}"
       end
       if typ != :space
-        ts << [typ, val]
+        ts << [typ, lexeme, val]
       end
       s = s[lexeme.length..-1]
     end
