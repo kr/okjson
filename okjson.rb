@@ -94,7 +94,10 @@ module OkJson
   # Parses a "member" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
   def pairparse(ts)
-    (_, _, k), ts = ts[0], ts[1..-1]
+    (typ, _, k), ts = ts[0], ts[1..-1]
+    if typ != :str
+      raise "unexpected #{k.inspect}"
+    end
     ts = eat(':', ts)
     v, ts = valparse(ts)
     [k, v, ts]
