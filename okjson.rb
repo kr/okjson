@@ -35,8 +35,8 @@ module OkJson
 
     typ, val = ts[0]
     case typ
-    when :lcubr then objparse(ts)
-    when :lsqbr then arrparse(ts)
+    when '{' then objparse(ts)
+    when '[' then arrparse(ts)
     else
       raise "unexpected #{val.inspect}"
     end
@@ -52,8 +52,8 @@ module OkJson
 
     typ, val = ts[0]
     case typ
-    when :lcubr    then objparse(ts)
-    when :lsqbr    then arrparse(ts)
+    when '{'    then objparse(ts)
+    when '['    then arrparse(ts)
     when :val,:str then [val, ts[1..-1]]
     else
       raise "unexpected #{val.inspect}"
@@ -64,27 +64,27 @@ module OkJson
   # Parses an "object" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
   def objparse(ts)
-    ts = eat(:lcubr, ts)
+    ts = eat('{', ts)
     obj = {}
 
-    if ts[0][0] == :rcubr
+    if ts[0][0] == '}'
       return obj, ts[1..-1]
     end
 
     k, v, ts = pairparse(ts)
     obj[k] = v
 
-    if ts[0][0] == :rcubr
+    if ts[0][0] == '}'
       return obj, ts[1..-1]
     end
 
     loop do
-      ts = eat(:comma, ts)
+      ts = eat(',', ts)
 
       k, v, ts = pairparse(ts)
       obj[k] = v
 
-      if ts[0][0] == :rcubr
+      if ts[0][0] == '}'
         return obj, ts[1..-1]
       end
     end
@@ -95,7 +95,7 @@ module OkJson
   # Returns the parsed value and any trailing tokens.
   def pairparse(ts)
     k, ts = ts[0][1], ts[1..-1]
-    ts = eat(:colon, ts)
+    ts = eat(':', ts)
     v, ts = valparse(ts)
     [k, v, ts]
   end
@@ -104,27 +104,27 @@ module OkJson
   # Parses an "array" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
   def arrparse(ts)
-    ts = eat(:lsqbr, ts)
+    ts = eat('[', ts)
     arr = []
 
-    if ts[0][0] == :rsqbr
+    if ts[0][0] == ']'
       return arr, ts[1..-1]
     end
 
     v, ts = valparse(ts)
     arr << v
 
-    if ts[0][0] == :rsqbr
+    if ts[0][0] == ']'
       return arr, ts[1..-1]
     end
 
     loop do
-      ts = eat(:comma, ts)
+      ts = eat(',', ts)
 
       v, ts = valparse(ts)
       arr << v
 
-      if ts[0][0] == :rsqbr
+      if ts[0][0] == ']'
         return arr, ts[1..-1]
       end
     end
@@ -163,9 +163,8 @@ module OkJson
   # if no such token exists.
   #
   # The first list element is one of
-  # :lcubr, :rcubr, :colon, :comma,
-  # :lsqbr, :rsqbr, :val, :str,
-  # or :space.
+  # '{', '}', ':', ',', '[', ']',
+  # :val, :str, and :space.
   #
   # The second element is the lexeme.
   #
@@ -174,12 +173,12 @@ module OkJson
   # it is the lexeme.
   def tok(s)
     case s[0]
-    when ?{  then [:lcubr, s[0,1], s[0,1]]
-    when ?}  then [:rcubr, s[0,1], s[0,1]]
-    when ?:  then [:colon, s[0,1], s[0,1]]
-    when ?,  then [:comma, s[0,1], s[0,1]]
-    when ?[  then [:lsqbr, s[0,1], s[0,1]]
-    when ?]  then [:rsqbr, s[0,1], s[0,1]]
+    when ?{  then ['{', s[0,1], s[0,1]]
+    when ?}  then ['}', s[0,1], s[0,1]]
+    when ?:  then [':', s[0,1], s[0,1]]
+    when ?,  then [',', s[0,1], s[0,1]]
+    when ?[  then ['[', s[0,1], s[0,1]]
+    when ?]  then [']', s[0,1], s[0,1]]
     when ?n  then nulltok(s)
     when ?t  then truetok(s)
     when ?f  then falsetok(s)
