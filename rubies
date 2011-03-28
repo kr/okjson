@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+try() {
+    RUBY=$1 ./test >&2
+    $1 -v
+}
+
+{
+    echo -n "This commit was tested "
+    date
+    echo using the following ruby interpreters:
+
+    for r in $*
+    do try $r
+    done
+} >tested-on
