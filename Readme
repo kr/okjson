@@ -1,5 +1,9 @@
 This is a json parser, written in ruby.
 It has no dependencies other than ruby.
+It is tested using:
+  ruby 1.8.7 (2010-06-23 patchlevel 299)
+  ruby 1.9.2p180 (2011-02-18 revision 30909)
+  rubinius 1.2.3 (1.8.7 release 2011-03-15 JI)
 
 This library is intended to be "vendored".
 It is not a gem; instead, copy okjson.rb
@@ -22,6 +26,7 @@ To Test:
 
   $ ./test
   $ RUBY=rbx ./test
+  $ RUBY=/opt/ruby192/bin/ruby ./test
 
 (Note: these tests originated at
 https://github.com/genki/json
