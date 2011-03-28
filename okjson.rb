@@ -258,8 +258,10 @@ module OkJson
           w += 1
         when ?u
           r += 1
-          uchar = hexdec4(q[r,4]) rescue begin
-            raise "invalid escape sequence \\u#{q[r,4]}"
+          uchar = begin
+            hexdec4(q[r,4])
+          rescue RuntimeError => e
+            raise "invalid escape sequence \\u#{q[r,4]}: #{e}"
           end
           r += 4
           if surrogate? uchar
@@ -323,9 +325,9 @@ module OkJson
 
   def nibble(c)
     case true
-    when ?0 <= c && c <= ?9 then c - ?0
-    when ?a <= c && c <= ?z then c - ?a + 10
-    when ?A <= c && c <= ?Z then c - ?A + 10
+    when ?0 <= c && c <= ?9 then c.ord - ?0.ord
+    when ?a <= c && c <= ?z then c.ord - ?a.ord + 10
+    when ?A <= c && c <= ?Z then c.ord - ?A.ord + 10
     else
       raise "invalid hex code #{c}"
     end
@@ -428,7 +430,7 @@ module OkJson
     n = s.length - i
     return [Ucharerr, 1] if n < 1
 
-    c0 = s[i]
+    c0 = s[i].ord
 
     # 1-byte, 7-bit sequence?
     if c0 < Utagx
@@ -440,7 +442,7 @@ module OkJson
 
     # need continuation byte
     return [Ucharerr, 1] if n < 2
-    c1 = s[i+1]
+    c1 = s[i+1].ord
     return [Ucharerr, 1] if c1 < Utagx || Utag2 <= c1
 
     # 2-byte, 11-bit sequence?
@@ -452,7 +454,7 @@ module OkJson
 
     # need second continuation byte
     return [Ucharerr, 1] if n < 3
-    c2 = s[i+2]
+    c2 = s[i+2].ord
     return [Ucharerr, 1] if c2 < Utagx || Utag2 <= c2
 
     # 3-byte, 16-bit sequence?
@@ -464,7 +466,7 @@ module OkJson
 
     # need third continuation byte
     return [Ucharerr, 1] if n < 4
-    c3 = s[i+3]
+    c3 = s[i+3].ord
     return [Ucharerr, 1] if c3 < Utagx || Utag2 <= c3
 
     # 4-byte, 21-bit sequence?
@@ -484,22 +486,22 @@ module OkJson
   def ucharenc(a, i, u)
     case true
     when u <= Uchar1max
-      a[i] = u & 0xff
+      a[i] = (u & 0xff).chr
       1
     when u <= Uchar2max
-      a[i+0] = Utag2 | ((u>>6)&0xff)
-      a[i+1] = Utagx | (u&Umaskx)
+      a[i+0] = (Utag2 | ((u>>6)&0xff)).chr
+      a[i+1] = (Utagx | (u&Umaskx)).chr
       2
     when u <= Uchar3max
-      a[i+0] = Utag3 | ((u>>12)&0xff)
-      a[i+1] = Utagx | ((u>>6)&Umaskx)
-      a[i+2] = Utagx | (u&Umaskx)
+      a[i+0] = (Utag3 | ((u>>12)&0xff)).chr
+      a[i+1] = (Utagx | ((u>>6)&Umaskx)).chr
+      a[i+2] = (Utagx | (u&Umaskx)).chr
       3
     else
-      a[i+0] = Utag4 | ((u>>18)&0xff)
-      a[i+1] = Utagx | ((u>>12)&Umaskx)
-      a[i+2] = Utagx | ((u>>6)&Umaskx)
-      a[i+3] = Utagx | (u&Umaskx)
+      a[i+0] = (Utag4 | ((u>>18)&0xff)).chr
+      a[i+1] = (Utagx | ((u>>12)&Umaskx)).chr
+      a[i+2] = (Utagx | ((u>>6)&Umaskx)).chr
+      a[i+3] = (Utagx | (u&Umaskx)).chr
       4
     end
   end
