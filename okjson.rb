@@ -336,7 +336,6 @@ module OkJson
 
   # Encodes x into a json text. It may contain only
   # Array, Hash, String, Numeric, true, false, nil.
-  # (Note, this list excludes Symbol.)
   # Strings contained in x must be valid UTF-8.
   # Values that cannot be represented, such as
   # Nan, Infinity, Symbol, and Proc, are encoded
@@ -347,6 +346,7 @@ module OkJson
     when Array   then arrenc(x)
     when String  then strenc(x)
     when Numeric then numenc(x)
+    when Symbol  then strenc(x.to_s)
     when true    then "true"
     when false   then "false"
     when nil     then "null"
