@@ -1,4 +1,4 @@
-This commit was tested Mon Mar 28 03:28:59 PDT 2011
+This commit was tested Thu Mar 31 16:16:11 PDT 2011
 using the following ruby interpreters:
 ruby 1.8.7 (2010-06-23 patchlevel 299) [x86_64-linux]
 ruby 1.9.2p180 (2011-02-18 revision 30909) [x86_64-linux]
