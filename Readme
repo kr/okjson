@@ -3,6 +3,18 @@ It has no dependencies other than ruby.
 See the file tested-on for a complete list
 of ruby interpreters used for testing.
 
+
+To Use:
+
+  OkJson.encode({"abc" => [123, -456.789]})
+  => "{\"abc\":[123,-456.789]}"
+
+  OkJson.decode('{"abc":[123,-456.789e0]}')
+  => {"abc"=>[123, -456.789]}
+
+That's it.
+
+
 This library is intended to be "vendored".
 It is not a gem; instead, copy okjson.rb
 into your project and "require" it directly.
@@ -14,10 +26,14 @@ OkJson is not particularly fast or flexible,
 but it is designed to be simple and portable.
 It should suffice for most needs.
 
+It provides two guarantees:
+ 1. okjson will never generate invalid json
+ 2. OkJson.decode(OkJson.encode(x)) == x
+
 Note for people who've used other ruby json
 libraries: json does not represent symbols,
-so OkJson does not encode them. Nor does it
-convert them to strings. That would silently
+so okjson does not encode them. It won't
+convert them to strings; that would silently
 corrupt your data. The same holds for all of
 ruby's other data types that don't exist in
 json, including Range, Regexp, Proc, Time,
@@ -38,14 +54,3 @@ To Test:
 https://github.com/genki/json
 but have been changed to follow
 RFC 4627 and revised substantially.)
-
-
-To Use:
-
-  OkJson.encode({"abc" => [123, -456.789]})
-  => "{\"abc\":[123,-456.789]}"
-
-  OkJson.decode('{"abc":[123,-456.789e0]}')
-  => {"abc"=>[123, -456.789]}
-
-That's it.
