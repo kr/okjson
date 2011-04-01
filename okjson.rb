@@ -360,10 +360,10 @@ module OkJson
   # Array, Hash, String, Numeric, true, false, nil.
   # (Note, this list excludes Symbol.)
   # X itself must be an Array or a Hash.
+  # No other value can be encoded, and an error will
+  # be raised if x contains any other value, such as
+  # Nan, Infinity, Symbol, and Proc.
   # Strings contained in x must be valid UTF-8.
-  # Values that cannot be represented, such as
-  # Nan, Infinity, Symbol, and Proc, are encoded
-  # as null, in accordance with ECMA-262, 5th ed.
   def encode(x)
     case x
     when Hash    then objenc(x)
@@ -382,7 +382,8 @@ module OkJson
     when true    then "true"
     when false   then "false"
     when nil     then "null"
-    else              "null"
+    else
+      raise "cannot encode #{x.class}: #{x.inspect}"
     end
   end
 
