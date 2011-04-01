@@ -28,6 +28,8 @@ require 'stringio'
 module OkJson
   extend self
 
+  class Error < ::StandardError; end
+
   # Decodes a json document in string s and
   # returns the corresponding ruby value.
   # String s must be valid UTF-8. If you have
@@ -40,7 +42,7 @@ module OkJson
     ts = lex(s)
     v, ts = textparse(ts)
     if ts.length > 0
-      raise 'trailing garbage'
+      raise Error, 'trailing garbage'
     end
     v
   end
@@ -52,7 +54,7 @@ module OkJson
   # except that it does not accept atomic values.
   def textparse(ts)
     if ts.length < 0
-      raise 'empty'
+      raise Error, 'empty'
     end
 
     typ, _, val = ts[0]
@@ -60,7 +62,7 @@ module OkJson
     when '{' then objparse(ts)
     when '[' then arrparse(ts)
     else
-      raise "unexpected #{val.inspect}"
+      raise Error, "unexpected #{val.inspect}"
     end
   end
 
@@ -69,7 +71,7 @@ module OkJson
   # Returns the parsed value and any trailing tokens.
   def valparse(ts)
     if ts.length < 0
-      raise 'empty'
+      raise Error, 'empty'
     end
 
     typ, _, val = ts[0]
@@ -78,7 +80,7 @@ module OkJson
     when '[' then arrparse(ts)
     when :val,:str then [val, ts[1..-1]]
     else
-      raise "unexpected #{val.inspect}"
+      raise Error, "unexpected #{val.inspect}"
     end
   end
 
@@ -118,7 +120,7 @@ module OkJson
   def pairparse(ts)
     (typ, _, k), ts = ts[0], ts[1..-1]
     if typ != :str
-      raise "unexpected #{k.inspect}"
+      raise Error, "unexpected #{k.inspect}"
     end
     ts = eat(':', ts)
     v, ts = valparse(ts)
@@ -158,7 +160,7 @@ module OkJson
 
   def eat(typ, ts)
     if ts[0][0] != typ
-      raise "expected #{typ} (got #{ts[0].inspect})"
+      raise Error, "expected #{typ} (got #{ts[0].inspect})"
     end
     ts[1..-1]
   end
@@ -171,7 +173,7 @@ module OkJson
     while s.length > 0
       typ, lexeme, val = tok(s)
       if typ == nil
-        raise "invalid character at #{s[0,10].inspect}"
+        raise Error, "invalid character at #{s[0,10].inspect}"
       end
       if typ != :space
         ts << [typ, lexeme, val]
@@ -238,7 +240,7 @@ module OkJson
   def strtok(s)
     m = /"([^"\\]|\\["\/\\bfnrt]|\\u[0-9a-fA-F]{4})*"/.match(s)
     if ! m
-      raise "invalid string literal at #{abbrev(s)}"
+      raise Error, "invalid string literal at #{abbrev(s)}"
     end
     [:str, m[0], unquote(m[0])]
   end
@@ -266,7 +268,7 @@ module OkJson
       when c == ?\\
         r += 1
         if r >= q.length
-          raise "string literal ends with a \"\\\": \"#{q}\""
+          raise Error, "string literal ends with a \"\\\": \"#{q}\""
         end
 
         case q[r]
@@ -283,7 +285,7 @@ module OkJson
           uchar = begin
             hexdec4(q[r,4])
           rescue RuntimeError => e
-            raise "invalid escape sequence \\u#{q[r,4]}: #{e}"
+            raise Error, "invalid escape sequence \\u#{q[r,4]}: #{e}"
           end
           r += 4
           if surrogate? uchar
@@ -298,10 +300,10 @@ module OkJson
           end
           w += ucharenc(a, w, uchar)
         else
-          raise "invalid escape char #{q[r]} in \"#{q}\""
+          raise Error, "invalid escape char #{q[r]} in \"#{q}\""
         end
       when c == ?", c < Spc
-        raise "invalid character in string literal \"#{q}\""
+        raise Error, "invalid character in string literal \"#{q}\""
       else
         # Copy anything else byte-for-byte.
         # Valid UTF-8 will remain valid UTF-8.
@@ -317,7 +319,7 @@ module OkJson
 
   def hexdec4(s)
     if s.length != 4
-      raise 'short'
+      raise Error, 'short'
     end
     (nibble(s[0])<<12) | (nibble(s[1])<<8) | (nibble(s[2])<<4) | nibble(s[3])
   end
@@ -351,7 +353,7 @@ module OkJson
     when ?a <= c && c <= ?z then c.ord - ?a.ord + 10
     when ?A <= c && c <= ?Z then c.ord - ?A.ord + 10
     else
-      raise "invalid hex code #{c}"
+      raise Error, "invalid hex code #{c}"
     end
   end
 
@@ -370,7 +372,7 @@ module OkJson
     when Hash    then objenc(x)
     when Array   then arrenc(x)
     else
-      raise 'root value must be an Array or a Hash'
+      raise Error, 'root value must be an Array or a Hash'
     end
   end
 
@@ -384,7 +386,7 @@ module OkJson
     when false   then "false"
     when nil     then "null"
     else
-      raise "cannot encode #{x.class}: #{x.inspect}"
+      raise Error, "cannot encode #{x.class}: #{x.inspect}"
     end
   end
 
@@ -403,7 +405,7 @@ module OkJson
     case k
     when String then strenc(k)
     else
-      raise "Hash key is not a string: #{k.inspect}"
+      raise Error, "Hash key is not a string: #{k.inspect}"
     end
   end
 
