@@ -14,10 +14,20 @@ OkJson is not particularly fast or flexible,
 but it is designed to be simple and portable.
 It should suffice for most needs.
 
+Note for people who've used other ruby json
+libraries: json does not represent symbols,
+so OkJson does not encode them. Nor does it
+convert them to strings. That would silently
+corrupt your data. The same holds for all of
+ruby's other data types that don't exist in
+json, including Range, Regexp, Proc, Time,
+and user-defined classes.
+
 Patches to increase the correctness,
 readability, or portability of the
 source code will be gratefully accepted.
-Other patches likely won't.
+Other patches (for example, extra features
+or optional behavior) likely won't.
 
 
 To Test:
