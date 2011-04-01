@@ -362,7 +362,8 @@ module OkJson
   # X itself must be an Array or a Hash.
   # No other value can be encoded, and an error will
   # be raised if x contains any other value, such as
-  # Nan, Infinity, Symbol, and Proc.
+  # Nan, Infinity, Symbol, and Proc, or if a Hash key
+  # is not a String.
   # Strings contained in x must be valid UTF-8.
   def encode(x)
     case x
@@ -389,12 +390,21 @@ module OkJson
 
 
   def objenc(x)
-    '{' + x.map{|k,v| valenc(k) + ':' + valenc(v)}.join(',') + '}'
+    '{' + x.map{|k,v| keyenc(k) + ':' + valenc(v)}.join(',') + '}'
   end
 
 
   def arrenc(a)
     '[' + a.map{|x| valenc(x)}.join(',') + ']'
+  end
+
+
+  def keyenc(k)
+    case k
+    when String then strenc(k)
+    else
+      raise "Hash key is not a string: #{k.inspect}"
+    end
   end
 
 
