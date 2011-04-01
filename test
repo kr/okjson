@@ -4,13 +4,17 @@ set -e
 
 : ${RUBY:=ruby}
 
+enc() {
+    $RUBY -r ./okjson -e 'print(OkJson.encode(eval($stdin.read)))'
+}
+
 cycle() {
     $RUBY -r ./okjson -e 'print(OkJson.encode(OkJson.decode($stdin.read)))'
 }
 
 fs=$*
 if test -z "$fs"
-then fs=t/*.json
+then fs=`echo t/*.{json,rb}`
 fi
 
 for f in $fs
@@ -23,7 +27,20 @@ do
         ;;
     t/invalid*.json)
         echo $f
-        cycle <$f 2>/dev/null && { echo; exit 1; }
+        if cycle <$f 2>/dev/null
+        then echo; exit 1
+        fi
+        ;;
+    t/encode*.rb)
+        echo $f
+        enc <$f >/dev/null
+        diff $f.exp <(enc <$f 2>/dev/null)
+        ;;
+    t/err*.rb)
+        echo $f
+        if enc <$f 2>/dev/null
+        then echo; exit 1
+        fi
         ;;
     esac
 done

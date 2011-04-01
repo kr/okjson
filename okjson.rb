@@ -359,11 +359,21 @@ module OkJson
   # Encodes x into a json text. It may contain only
   # Array, Hash, String, Numeric, true, false, nil.
   # (Note, this list excludes Symbol.)
+  # X itself must be an Array or a Hash.
   # Strings contained in x must be valid UTF-8.
   # Values that cannot be represented, such as
   # Nan, Infinity, Symbol, and Proc, are encoded
   # as null, in accordance with ECMA-262, 5th ed.
   def encode(x)
+    case x
+    when Hash    then objenc(x)
+    when Array   then arrenc(x)
+    else
+      raise 'root value must be an Array or a Hash'
+    end
+  end
+
+  def valenc(x)
     case x
     when Hash    then objenc(x)
     when Array   then arrenc(x)
@@ -378,12 +388,12 @@ module OkJson
 
 
   def objenc(x)
-    '{' + x.map{|k,v| encode(k) + ':' + encode(v)}.join(',') + '}'
+    '{' + x.map{|k,v| valenc(k) + ':' + valenc(v)}.join(',') + '}'
   end
 
 
   def arrenc(a)
-    '[' + a.map{|x| encode(x)}.join(',') + ']'
+    '[' + a.map{|x| valenc(x)}.join(',') + ']'
   end
 
 
