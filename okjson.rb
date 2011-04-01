@@ -28,7 +28,6 @@ require 'stringio'
 module OkJson
   extend self
 
-  class Error < ::StandardError; end
 
   # Decodes a json document in string s and
   # returns the corresponding ruby value.
@@ -317,6 +316,33 @@ module OkJson
   end
 
 
+  # Encodes unicode character u as UTF-8
+  # bytes in string a at position i.
+  # Returns the number of bytes written.
+  def ucharenc(a, i, u)
+    case true
+    when u <= Uchar1max
+      a[i] = (u & 0xff).chr
+      1
+    when u <= Uchar2max
+      a[i+0] = (Utag2 | ((u>>6)&0xff)).chr
+      a[i+1] = (Utagx | (u&Umaskx)).chr
+      2
+    when u <= Uchar3max
+      a[i+0] = (Utag3 | ((u>>12)&0xff)).chr
+      a[i+1] = (Utagx | ((u>>6)&Umaskx)).chr
+      a[i+2] = (Utagx | (u&Umaskx)).chr
+      3
+    else
+      a[i+0] = (Utag4 | ((u>>18)&0xff)).chr
+      a[i+1] = (Utagx | ((u>>12)&Umaskx)).chr
+      a[i+2] = (Utagx | ((u>>6)&Umaskx)).chr
+      a[i+3] = (Utagx | (u&Umaskx)).chr
+      4
+    end
+  end
+
+
   def hexdec4(s)
     if s.length != 4
       raise Error, 'short'
@@ -375,6 +401,7 @@ module OkJson
       raise Error, 'root value must be an Array or a Hash'
     end
   end
+
 
   def valenc(x)
     case x
@@ -525,31 +552,9 @@ module OkJson
   end
 
 
-  # Encodes unicode character u as UTF-8
-  # bytes in string a at position i.
-  # Returns the number of bytes written.
-  def ucharenc(a, i, u)
-    case true
-    when u <= Uchar1max
-      a[i] = (u & 0xff).chr
-      1
-    when u <= Uchar2max
-      a[i+0] = (Utag2 | ((u>>6)&0xff)).chr
-      a[i+1] = (Utagx | (u&Umaskx)).chr
-      2
-    when u <= Uchar3max
-      a[i+0] = (Utag3 | ((u>>12)&0xff)).chr
-      a[i+1] = (Utagx | ((u>>6)&Umaskx)).chr
-      a[i+2] = (Utagx | (u&Umaskx)).chr
-      3
-    else
-      a[i+0] = (Utag4 | ((u>>18)&0xff)).chr
-      a[i+1] = (Utagx | ((u>>12)&Umaskx)).chr
-      a[i+2] = (Utagx | ((u>>6)&Umaskx)).chr
-      a[i+3] = (Utagx | (u&Umaskx)).chr
-      4
-    end
+  class Error < ::StandardError
   end
+
 
   Utagx = 0x80 # 1000 0000
   Utag2 = 0xc0 # 1100 0000
