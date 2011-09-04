@@ -21,6 +21,10 @@ into your project and "require" it directly.
 This method helps you avoid an external
 dependency. It's only about 550 lines of
 source; about half of that is UTF-8 coding.
+If you bundle okjson with your library,
+please change the module's name to something
+like MyLib::OkJson, to avoid conflicts with
+other libraries.
 
 OkJson is not particularly fast or flexible,
 but it is designed to be simple and portable.
