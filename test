@@ -5,11 +5,11 @@ set -e
 : ${RUBY:=ruby}
 
 enc() {
-    $RUBY -r ./okjson -e 'print(OkJson.encode(eval($stdin.read)))'
+    $RUBY -r ./okjson -e 'puts(OkJson.encode(eval($stdin.read)))'
 }
 
 cycle() {
-    $RUBY -r ./okjson -e 'print(OkJson.encode(OkJson.decode($stdin.read)))'
+    $RUBY -r ./okjson -e 'puts(OkJson.encode(OkJson.decode($stdin.read)))'
 }
 
 fs=$*
