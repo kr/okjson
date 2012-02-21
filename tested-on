@@ -1,4 +1,4 @@
-This commit was tested Mon Feb 20 16:08:17 PST 2012
+This commit was tested Mon Feb 20 18:21:05 PST 2012
 using the following ruby interpreters:
 ruby 1.8.7 (2010-01-10 patchlevel 249) [universal-darwin11.0]
 ruby 1.9.2p290 (2011-07-09 revision 32553) [x86_64-darwin11.2.0]
