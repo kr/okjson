@@ -7,12 +7,24 @@ try() {
     $1 -v
 }
 
+pick() {
+    if test -f $1
+    then try $1
+    else try $HOME/.rbenv/versions/$1/bin/ruby
+    fi
+}
+
 {
     echo -n "This commit was tested "
     date
     echo using the following ruby interpreters:
 
-    for r in $*
-    do try $r
+    if test $# -lt 1
+    then vs=`ls $HOME/.rbenv/versions`
+    else vs=$*
+    fi
+
+    for r in $vs
+    do pick $r
     done
 } >tested-on
