@@ -1,5 +1,13 @@
-This commit was tested Mon Feb 20 18:21:05 PST 2012
+This commit was tested Tue Mar 27 00:02:01 PDT 2012
 using the following ruby interpreters:
-ruby 1.8.7 (2010-01-10 patchlevel 249) [universal-darwin11.0]
-ruby 1.9.2p290 (2011-07-09 revision 32553) [x86_64-darwin11.2.0]
-rubinius 1.2.4 (1.8.7 release 2011-07-05 JI) [x86_64-apple-darwin11.2.0]
+ruby 1.8.7 (2010-01-10 patchlevel 249) [i686-darwin11.3.0]
+ruby 1.8.7 (2011-06-30 patchlevel 352) [i686-darwin11.2.0]
+ruby 1.9.1p378 (2010-01-10 revision 26273) [i386-darwin11.3.0]
+ruby 1.9.2p290 (2011-07-09 revision 32553) [x86_64-darwin11.1.0]
+ruby 1.9.3p166 (2012-03-26 revision 35128) [x86_64-darwin11.3.0]
+ruby 1.9.3p125 (2012-02-16 revision 34643) [x86_64-darwin11.3.0]
+jruby 1.6.3 (ruby-1.8.7-p330) (2011-07-07 965162f) (Java HotSpot(TM) 64-Bit Server VM 1.6.0_29) [darwin-x86_64-java]
+jruby 1.6.7 (ruby-1.8.7-p357) (2012-02-22 3e82bc8) (Java HotSpot(TM) 64-Bit Server VM 1.6.0_29) [darwin-x86_64-java]
+rubinius 1.2.4 (1.8.7 release 2011-07-05 JI) [x86_64-apple-darwin11.3.0]
+rubinius 2.0.0dev (1.8.7 b4ab27cf yyyy-mm-dd JI) [x86_64-apple-darwin11.3.0]
+ruby 1.8.7 (2009-06-12 patchlevel 174) [i686-darwin11.3.0], MBARI 0x6770, Ruby Enterprise Edition 20090928
