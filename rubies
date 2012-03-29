@@ -8,7 +8,7 @@ try() {
 }
 
 pick() {
-    if test -f $1
+    if which $1 >/dev/null
     then try $1
     else try $HOME/.rbenv/versions/$1/bin/ruby
     fi
