@@ -28,6 +28,7 @@ require 'stringio'
 # http://golang.org/src/pkg/json/decode.go and
 # http://golang.org/src/pkg/utf8/utf8.go
 module OkJson
+  Upstream = 'LTD7LBKLZWFF7OZK'
   extend self
 
 
