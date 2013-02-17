@@ -573,15 +573,15 @@ module OkJson
   end
 
 
-  Utagx = 0x80 # 1000 0000
-  Utag2 = 0xc0 # 1100 0000
-  Utag3 = 0xe0 # 1110 0000
-  Utag4 = 0xf0 # 1111 0000
-  Utag5 = 0xF8 # 1111 1000
-  Umaskx = 0x3f # 0011 1111
-  Umask2 = 0x1f # 0001 1111
-  Umask3 = 0x0f # 0000 1111
-  Umask4 = 0x07 # 0000 0111
+  Utagx = 0b1000_0000
+  Utag2 = 0b1100_0000
+  Utag3 = 0b1110_0000
+  Utag4 = 0b1111_0000
+  Utag5 = 0b1111_1000
+  Umaskx = 0b0011_1111
+  Umask2 = 0b0001_1111
+  Umask3 = 0b0000_1111
+  Umask4 = 0b0000_0111
   Uchar1max = (1<<7) - 1
   Uchar2max = (1<<11) - 1
   Uchar3max = (1<<16) - 1
