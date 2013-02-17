@@ -28,7 +28,7 @@ require 'stringio'
 # http://golang.org/src/pkg/json/decode.go and
 # http://golang.org/src/pkg/utf8/utf8.go
 module OkJson
-  Upstream = 'LTD7LBKLZWFF7OZK'
+  Upstream = '35'
   extend self
 
 
@@ -274,8 +274,7 @@ module OkJson
     r, w = 0, 0
     while r < q.length
       c = q[r]
-      case true
-      when c == ?\\
+      if c == ?\\
         r += 1
         if r >= q.length
           raise Error, "string literal ends with a \"\\\": \"#{q}\""
@@ -317,7 +316,7 @@ module OkJson
         else
           raise Error, "invalid escape char #{q[r]} in \"#{q}\""
         end
-      when c == ?", c < Spc
+      elsif c == ?" || c < Spc
         raise Error, "invalid character in string literal \"#{q}\""
       else
         # Copy anything else byte-for-byte.
@@ -338,15 +337,14 @@ module OkJson
   # bytes in string a at position i.
   # Returns the number of bytes written.
   def ucharenc(a, i, u)
-    case true
-    when u <= Uchar1max
+    if u <= Uchar1max
       a[i] = (u & 0xff).chr
       1
-    when u <= Uchar2max
+    elsif u <= Uchar2max
       a[i+0] = (Utag2 | ((u>>6)&0xff)).chr
       a[i+1] = (Utagx | (u&Umaskx)).chr
       2
-    when u <= Uchar3max
+    elsif u <= Uchar3max
       a[i+0] = (Utag3 | ((u>>12)&0xff)).chr
       a[i+1] = (Utagx | ((u>>6)&Umaskx)).chr
       a[i+2] = (Utagx | (u&Umaskx)).chr
@@ -383,10 +381,9 @@ module OkJson
 
 
   def nibble(c)
-    case true
-    when ?0 <= c && c <= ?9 then c.ord - ?0.ord
-    when ?a <= c && c <= ?z then c.ord - ?a.ord + 10
-    when ?A <= c && c <= ?Z then c.ord - ?A.ord + 10
+    if ?0 <= c && c <= ?9 then c.ord - ?0.ord
+    elsif ?a <= c && c <= ?z then c.ord - ?a.ord + 10
+    elsif ?A <= c && c <= ?Z then c.ord - ?A.ord + 10
     else
       raise Error, "invalid hex code #{c}"
     end
@@ -465,15 +462,14 @@ module OkJson
       when ?\t then t.print('\\t')
       else
         c = s[r]
-        case true
-        when rubydoesenc
+        if rubydoesenc
           begin
             c.ord # will raise an error if c is invalid UTF-8
             t.write(c)
           rescue
             t.write(Ustrerr)
           end
-        when Spc <= c && c <= ?~
+        elsif Spc <= c && c <= ?~
           t.putc(c)
         else
           n = ucharcopy(t, s, r) # ensure valid UTF-8 output
