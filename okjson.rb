@@ -28,7 +28,7 @@ require 'stringio'
 # http://golang.org/src/pkg/json/decode.go and
 # http://golang.org/src/pkg/utf8/utf8.go
 module OkJson
-  Upstream = '37'
+  Upstream = '38'
   extend self
 
 
@@ -48,6 +48,28 @@ module OkJson
     end
     v
   end
+
+
+  # Encodes x into a json text. It may contain only
+  # Array, Hash, String, Numeric, true, false, nil.
+  # (Note, this list excludes Symbol.)
+  # X itself must be an Array or a Hash.
+  # No other value can be encoded, and an error will
+  # be raised if x contains any other value, such as
+  # Nan, Infinity, Symbol, and Proc, or if a Hash key
+  # is not a String.
+  # Strings contained in x must be valid UTF-8.
+  def encode(x)
+    case x
+    when Hash    then objenc(x)
+    when Array   then arrenc(x)
+    else
+      raise Error, 'root value must be an Array or a Hash'
+    end
+  end
+
+
+private
 
 
   # Parses a "json text" in the sense of RFC 4627.
@@ -386,25 +408,6 @@ module OkJson
     elsif ?A <= c && c <= ?Z then c.ord - ?A.ord + 10
     else
       raise Error, "invalid hex code #{c}"
-    end
-  end
-
-
-  # Encodes x into a json text. It may contain only
-  # Array, Hash, String, Numeric, true, false, nil.
-  # (Note, this list excludes Symbol.)
-  # X itself must be an Array or a Hash.
-  # No other value can be encoded, and an error will
-  # be raised if x contains any other value, such as
-  # Nan, Infinity, Symbol, and Proc, or if a Hash key
-  # is not a String.
-  # Strings contained in x must be valid UTF-8.
-  def encode(x)
-    case x
-    when Hash    then objenc(x)
-    when Array   then arrenc(x)
-    else
-      raise Error, 'root value must be an Array or a Hash'
     end
   end
 
