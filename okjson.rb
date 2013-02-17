@@ -223,21 +223,19 @@ private
   # it is the lexeme.
   def tok(s)
     case s[0]
-    when ?{  then ['{', s[0,1], s[0,1]]
-    when ?}  then ['}', s[0,1], s[0,1]]
-    when ?:  then [':', s[0,1], s[0,1]]
-    when ?,  then [',', s[0,1], s[0,1]]
-    when ?[  then ['[', s[0,1], s[0,1]]
-    when ?]  then [']', s[0,1], s[0,1]]
-    when ?n  then nulltok(s)
-    when ?t  then truetok(s)
-    when ?f  then falsetok(s)
-    when ?"  then strtok(s)
-    when Spc then [:space, s[0,1], s[0,1]]
-    when ?\t then [:space, s[0,1], s[0,1]]
-    when ?\n then [:space, s[0,1], s[0,1]]
-    when ?\r then [:space, s[0,1], s[0,1]]
-    else          numtok(s)
+    when ?{ then ['{', s[0,1], s[0,1]]
+    when ?} then ['}', s[0,1], s[0,1]]
+    when ?: then [':', s[0,1], s[0,1]]
+    when ?, then [',', s[0,1], s[0,1]]
+    when ?[ then ['[', s[0,1], s[0,1]]
+    when ?] then [']', s[0,1], s[0,1]]
+    when ?n then nulltok(s)
+    when ?t then truetok(s)
+    when ?f then falsetok(s)
+    when ?" then strtok(s)
+    when Spc, ?\t, ?\n, ?\r then [:space, s[0,1], s[0,1]]
+    else
+      numtok(s)
     end
   end
 
