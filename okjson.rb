@@ -250,12 +250,12 @@ private
   def numtok(s)
     m = /-?([1-9][0-9]+|[0-9])([.][0-9]+)?([eE][+-]?[0-9]+)?/.match(s)
     if m && m.begin(0) == 0
-      if m[3] && !m[2]
-        [:val, m[0], Integer(m[1])*(10**Integer(m[3][1..-1]))]
+      if !m[2] && !m[3]
+        [:val, m[0], Integer(m[0])]
       elsif m[2]
         [:val, m[0], Float(m[0])]
       else
-        [:val, m[0], Integer(m[0])]
+        [:val, m[0], Integer(m[1])*(10**Integer(m[3][1..-1]))]
       end
     else
       []
