@@ -287,11 +287,9 @@ private
   def unquote(q)
     q = q[1...-1]
     a = q.dup # allocate a big enough string
-    rubydoesenc = false
     # In ruby >= 1.9, a[w] is a codepoint, not a byte.
-    if a.class.method_defined?(:force_encoding)
+    if rubydoesenc?
       a.force_encoding('UTF-8')
-      rubydoesenc = true
     end
     r, w = 0, 0
     while r < q.length
@@ -329,7 +327,7 @@ private
               end
             end
           end
-          if rubydoesenc
+          if rubydoesenc?
             a[w] = '' << uchar
             w += 1
           else
@@ -451,9 +449,6 @@ private
     t.putc(?")
     r = 0
 
-    # In ruby >= 1.9, s[r] is a codepoint, not a byte.
-    rubydoesenc = s.class.method_defined?(:encoding)
-
     while r < s.length
       case s[r]
       when ?"  then t.print('\\"')
@@ -465,7 +460,8 @@ private
       when ?\t then t.print('\\t')
       else
         c = s[r]
-        if rubydoesenc
+        # In ruby >= 1.9, s[r] is a codepoint, not a byte.
+        if rubydoesenc?
           begin
             c.ord # will raise an error if c is invalid UTF-8
             t.write(c)
@@ -561,6 +557,11 @@ private
   rescue Utf8Error
     t.write(Ustrerr)
     return 1
+  end
+
+
+  def rubydoesenc?
+    ::String.method_defined?(:force_encoding)
   end
 
 
