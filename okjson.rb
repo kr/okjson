@@ -28,7 +28,7 @@ require 'stringio'
 # http://golang.org/src/pkg/json/decode.go and
 # http://golang.org/src/pkg/utf8/utf8.go
 module OkJson
-  Upstream = '36'
+  Upstream = '37'
   extend self
 
 
@@ -55,7 +55,7 @@ module OkJson
   # Note: this is almost the same as valparse,
   # except that it does not accept atomic values.
   def textparse(ts)
-    if ts.length < 0
+    if ts.length <= 0
       raise Error, 'empty'
     end
 
@@ -72,7 +72,7 @@ module OkJson
   # Parses a "value" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
   def valparse(ts)
-    if ts.length < 0
+    if ts.length <= 0
       raise Error, 'empty'
     end
 
