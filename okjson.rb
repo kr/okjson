@@ -28,7 +28,7 @@ require 'stringio'
 # http://golang.org/src/pkg/json/decode.go and
 # http://golang.org/src/pkg/utf8/utf8.go
 module OkJson
-  Upstream = '41'
+  Upstream = '42'
   extend self
 
 
@@ -65,6 +65,21 @@ module OkJson
     when Array   then arrenc(x)
     else
       raise Error, 'root value must be an Array or a Hash'
+    end
+  end
+
+
+  def valenc(x)
+    case x
+    when Hash    then objenc(x)
+    when Array   then arrenc(x)
+    when String  then strenc(x)
+    when Numeric then numenc(x)
+    when true    then "true"
+    when false   then "false"
+    when nil     then "null"
+    else
+      raise Error, "cannot encode #{x.class}: #{x.inspect}"
     end
   end
 
@@ -404,21 +419,6 @@ private
     elsif ?A <= c && c <= ?Z then c.ord - ?A.ord + 10
     else
       raise Error, "invalid hex code #{c}"
-    end
-  end
-
-
-  def valenc(x)
-    case x
-    when Hash    then objenc(x)
-    when Array   then arrenc(x)
-    when String  then strenc(x)
-    when Numeric then numenc(x)
-    when true    then "true"
-    when false   then "false"
-    when nil     then "null"
-    else
-      raise Error, "cannot encode #{x.class}: #{x.inspect}"
     end
   end
 
