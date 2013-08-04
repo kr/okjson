@@ -13,3 +13,4 @@ then
 	test "$new" || fail empty new tag
 	test "$old" == "$new" && fail you forgot to update the tag
 fi
+true
