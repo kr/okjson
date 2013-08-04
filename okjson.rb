@@ -28,7 +28,7 @@ require 'stringio'
 # http://golang.org/src/pkg/json/decode.go and
 # http://golang.org/src/pkg/utf8/utf8.go
 module OkJson
-  Upstream = '42'
+  Upstream = '43'
   extend self
 
 
@@ -461,11 +461,16 @@ private
         # In ruby >= 1.9, s[r] is a codepoint, not a byte.
         if rubydoesenc?
           begin
-            c.ord # will raise an error if c is invalid UTF-8
+            # c.ord will raise an error if c is invalid UTF-8
+            if c.ord < Spc.ord
+              c = "\\u%04x" % [c.ord]
+            end
             t.write(c)
           rescue
             t.write(Ustrerr)
           end
+        elsif c < Spc
+          t.write("\\u%04x" % c)
         elsif Spc <= c && c <= ?~
           t.putc(c)
         else
