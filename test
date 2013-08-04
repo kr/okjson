@@ -36,7 +36,7 @@ do
         ;;
     t/err*.rb)
         if enc <$f 2>/dev/null
-        then echo; exit 1
+        then echo >&2 expected error; exit 1
         fi
         ;;
     esac
