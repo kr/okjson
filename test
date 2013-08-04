@@ -17,30 +17,28 @@ if test -z "$fs"
 then fs=`echo t/*.{json,rb}`
 fi
 
+trap 'echo $RUBY; echo $f' EXIT
 for f in $fs
 do
     case $f in
     t/valid*.json)
-        echo $f
         cycle <$f >/dev/null
         diff $f.exp <(cycle <$f 2>/dev/null)
         ;;
     t/invalid*.json)
-        echo $f
         if cycle <$f 2>/dev/null
         then echo; exit 1
         fi
         ;;
     t/encode*.rb)
-        echo $f
         enc <$f >/dev/null
         diff $f.exp <(enc <$f 2>/dev/null)
         ;;
     t/err*.rb)
-        echo $f
         if enc <$f 2>/dev/null
         then echo; exit 1
         fi
         ;;
     esac
 done
+trap - EXIT
