@@ -1,14 +1,13 @@
-This commit was tested Sat Aug  3 18:50:30 PDT 2013
+This commit was tested Fri Aug 14 22:12:52 CEST 2015
 using the following ruby interpreters:
-ruby 1.8.7 (2010-01-10 patchlevel 249) [i686-darwin11.3.0]
-ruby 1.8.7 (2011-06-30 patchlevel 352) [i686-darwin11.2.0]
-ruby 1.9.1p378 (2010-01-10 revision 26273) [i386-darwin11.3.0]
-ruby 1.9.2p290 (2011-07-09 revision 32553) [x86_64-darwin11.1.0]
-ruby 1.9.3p166 (2012-03-26 revision 35128) [x86_64-darwin11.3.0]
-ruby 1.9.3p125 (2012-02-16 revision 34643) [x86_64-darwin11.3.0]
-ruby 2.0.0p0 (2013-02-24 revision 39474) [x86_64-darwin12.2.0]
-jruby 1.6.3 (ruby-1.8.7-p330) (2011-07-07 965162f) (Java HotSpot(TM) 64-Bit Server VM 1.6.0_51) [darwin-x86_64-java]
-jruby 1.6.7 (ruby-1.8.7-p357) (2012-02-22 3e82bc8) (Java HotSpot(TM) 64-Bit Server VM 1.6.0_51) [darwin-x86_64-java]
-rubinius 1.2.4 (1.8.7 release 2011-07-05 JI) [x86_64-apple-darwin11.3.0]
-rubinius 2.0.0dev (1.8.7 b4ab27cf yyyy-mm-dd JI) [x86_64-apple-darwin11.3.0]
-ruby 1.8.7 (2009-06-12 patchlevel 174) [i686-darwin11.3.0], MBARI 0x6770, Ruby Enterprise Edition 20090928
+ruby 1.8.7 (2013-12-22 patchlevel 375) [i686-darwin14.1.0]
+ruby 1.9.3p551 (2014-11-13 revision 48407) [x86_64-darwin14.0.0]
+ruby 2.0.0p481 (2014-05-08 revision 45883) [x86_64-darwin14.0.0]
+ruby 2.0.0p645 (2015-04-13 revision 50299) [x86_64-darwin14.3.0]
+ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-darwin14.0]
+ruby 2.1.6p336 (2015-04-13 revision 50298) [x86_64-darwin14.0]
+ruby 2.2.2p95 (2015-04-13 revision 50295) [x86_64-darwin14]
+ruby 2.3.0dev (2015-08-15 trunk 51582) [x86_64-darwin14]
+jruby 1.7.21 (1.9.3p551) 2015-07-07 a741a82 on Java HotSpot(TM) 64-Bit Server VM 1.7.0_51-b13 +jit [darwin-x86_64]
+jruby 9.0.0.0 (2.2.2) 2015-07-21 e10ec96 Java HotSpot(TM) 64-Bit Server VM 24.51-b03 on 1.7.0_51-b13 +jit [darwin-x86_64]
+rubinius 2.5.8 (2.1.0 bef51ae3 2015-07-19 3.5.1 JI) [x86_64-darwin14.4.0]
