@@ -28,7 +28,7 @@ require 'stringio'
 # https://golang.org/src/encoding/json/decode.go and
 # https://golang.org/src/unicode/utf8/utf8.go
 module OkJson
-  Upstream = '43'
+  Upstream = '44'
   extend self
 
 
